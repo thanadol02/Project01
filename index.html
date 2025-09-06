@@ -1,9 +1,170 @@
 <!DOCTYPE HTML>
-<html>
+<html lang="th">
     <title>Hatchy Time</title>
-    <center>
+    <style>
+:root {
+--bg: #0b1020;
+--card: #11172a;
+--muted: #9fb0d6;
+--accent: #5dd0ff;
+--border: #24314f;
+--ok: #35c759;
+--warn: #ffb020;
+--err: #ff4d4f;
+}
+* { box-sizing: border-box; }
+body {
+margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+background: radial-gradient(1200px 600px at 10% 0%, #122042, var(--bg));
+color: #e6eeff;
+}
+.container { max-width: 980px; margin: 40px auto; padding: 0 16px; }
+.title { font-size: clamp(22px, 2.6vw, 34px); font-weight: 800; letter-spacing: .3px; margin: 0 0 8px; }
+.subtitle { color: var(--muted); margin: 0 0 24px; }
+
+
+.card {
+background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.00));
+border: 1px solid var(--border);
+border-radius: 16px;
+padding: 20px;
+box-shadow: 0 10px 35px rgba(0,0,0,.35);
+}
+
+.dropzone {
+border: 2px dashed #2b3a60; border-radius: 14px; padding: 30px; text-align: center;
+transition: .18s ease all; background: rgba(17, 23, 42, .45);
+cursor: pointer;
+}
+.dropzone:hover { border-color: var(--accent); box-shadow: inset 0 0 0 1px rgba(93,208,255,.25); }
+.dropzone.dragover { background: rgba(93,208,255,.08); border-color: var(--accent); }
+.dz-title { font-weight: 700; margin-bottom: 6px; }
+.dz-sub { color: var(--muted); font-size: 14px; }
+.tips { font-size: 12px; opacity: .8; margin-top: 10px; }
+
+
+.row { display: grid; grid-template-columns: 1fr; gap: 16px; }
+@media (min-width: 860px) { .row { grid-template-columns: 1.1fr .9fr; } }
+
+
+.meta {
+display: grid; gap: 8px; grid-template-columns: 1fr 1fr; margin-top: 14px; font-size: 14px; color: #cfe0ff;
+}
+.meta div { background: rgba(255,255,255,.04); border: 1px solid var(--border); padding: 10px 12px; border-radius: 12px; }
+.meta b { display:block; font-size: 12px; color: var(--muted); font-weight: 600; margin-bottom: 4px; }
+
+
+.status { margin-top: 14px; font-size: 14px; }
+.status.ok { color: var(--ok); }
+.status.warn { color: var(--warn); }
+.status.err { color: var(--err); }
+
+
+#preview { margin-top: 18px; }
+img.preview-img { width: 100%; max-height: 520px; object-fit: contain; border-radius: 12px; border: 1px solid var(--border); background: #0c1224; }
+iframe.preview-pdf { width: 100%; height: 560px; border: 1px solid var(--border); border-radius: 12px; background: #0c1224; }
+pre.preview-text { white-space: pre-wrap; background: #0c1224; padding: 14px; border-radius: 12px; border: 1px solid var(--border); max-height: 560px; overflow: auto; }
+
+
+table { width: 100%; border-collapse: collapse; border: 1px solid var(--border); background: #0c1224; border-radius: 12px; overflow: hidden; }
+thead th { position: sticky; top: 0; background: #122042; }
+th, td { padding: 10px 12px; border-bottom: 1px solid #1b2949; font-size: 14px; }
+tbody tr:hover { background: rgba(93,208,255,.05); }
+
+
+.toolbar { display: flex; gap: 10px; flex-wrap: wrap; margin: 14px 0; }
+button, .btn {
+appearance: none; border: 1px solid var(--border); background: #162243; color: #e6eeff; padding: 10px 14px; border-radius: 12px; cursor: pointer;
+font-weight: 600; transition: .18s; font-size: 14px;
+}
+button:hover, .btn:hover { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(93,208,255,.15); }
+.muted { color: var(--muted); }
+.hidden { display: none !important; }
+.note { font-size: 13px; color: var(--muted); margin-top: 8px; }
+.chip { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; background:#142246; border:1px solid var(--border); font-size:12px; color:#d3e3ff; }
+</style>
     <head>
         Reading Timer
     </head>
-    </center>
+    <body>
+
+
+const sizeLimit = isImage ? LIMITS.image : isPDF ? LIMITS.pdf : (isCSV || isTXT) ? LIMITS.text : LIMITS.text;
+if (file.size > sizeLimit) {
+setStatus(`ไฟล์ใหญ่เกินกำหนด (${fmtBytes(file.size)})`, 'err');
+previewEl.innerHTML = '';
+return;
+}
+
+
+showMeta(file);
+setStatus('กำลังอ่านไฟล์...');
+lastCSVArray = null; btnJSON.classList.add('hidden');
+
+
+// Render by type
+if (isImage) {
+const url = URL.createObjectURL(file);
+previewEl.innerHTML = `<img class="preview-img" alt="preview" src="${url}">`;
+setStatus('แสดงรูปภาพสำเร็จ ✅', 'ok');
+}
+else if (isPDF) {
+const url = URL.createObjectURL(file);
+previewEl.innerHTML = `<iframe title="PDF preview" class="preview-pdf" src="${url}"></iframe>`;
+setStatus('แสดง PDF สำเร็จ ✅', 'ok');
+}
+else if (isCSV) {
+const text = await file.text();
+const rows = parseCSV(text);
+lastCSVArray = rows;
+const table = tableFrom2D(rows);
+previewEl.innerHTML = '';
+previewEl.appendChild(table);
+setStatus(`อ่าน CSV ได้ ${rows.length.toLocaleString()} แถว ✅`, 'ok');
+btnJSON.classList.remove('hidden');
+}
+else if (isTXT) {
+const text = await file.text();
+previewEl.innerHTML = `<pre class="preview-text"></pre>`;
+previewEl.querySelector('pre').textContent = text;
+setStatus('แสดงข้อความสำเร็จ ✅', 'ok');
+}
+else {
+previewEl.innerHTML = '';
+setStatus('ชนิดไฟล์นี้ยังไม่รองรับสำหรับการแสดงผลในหน้านี้', 'warn');
+}
+
+
+btnClear.classList.remove('hidden');
+}
+
+
+function clearAll() {
+previewEl.innerHTML = '';
+metaEl.innerHTML = '';
+statusEl.textContent = '';
+footnoteEl.textContent = '';
+lastCSVArray = null;
+btnJSON.classList.add('hidden');
+btnClear.classList.add('hidden');
+fileInput.value = '';
+}
+
+
+// ===== Events =====
+dropzone.addEventListener('click', () => fileInput.click());
+dropzone.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); } });
+
+
+['dragenter','dragover'].forEach(evt => dropzone.addEventListener(evt, e => { e.preventDefault(); dropzone.classList.add('dragover'); }));
+;['dragleave','drop'].forEach(evt => dropzone.addEventListener(evt, e => { e.preventDefault(); dropzone.classList.remove('dragover'); }));
+dropzone.addEventListener('drop', e => { const f = e.dataTransfer.files && e.dataTransfer.files[0]; if (f) handleFile(f); });
+
+
+fileInput.addEventListener('change', e => { const f = e.target.files && e.target.files[0]; if (f) handleFile(f); });
+btnClear.addEventListener('click', clearAll);
+btnJSON.addEventListener('click', () => { if (!lastCSVArray) return; const objs = csvToObjects(lastCSVArray); downloadJSON(objs, 'from-csv.json'); });
+</script>
+</body>
+    
 </html>
