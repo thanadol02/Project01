@@ -1,18 +1,35 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="th">
-        <center>
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Hatchy Time</title> 
-        <h1 style="display:inline-block;margin:8px 0;font-size: medium; color:aqua; background:black; border:18px;">
-            Reading Timer</h1>
-        <span style="color:blue">Read</span>
-        <span style="color:pink">ing</span><br>
-        <button onclick="">Click</button>
-    </head></center>
-    <body>
-        <p></p>
-    </body>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hatchy Time</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
 
+  <!-- ส่วนหัว -->
+  <header class="site-header">
+    <h1 class="site-title">📖 Reading Timer</h1>
+    <nav class="nav">
+      <a href="index.html" class="nav-link is-active">Home</a>
+      <a href="timer.html" class="nav-link">Timer</a>
+    </nav>
+  </header>
+
+  <!-- เนื้อหา -->
+  <main class="container">
+    <p class="subtitle">
+      <span class="text-blue">Read</span><span class="text-pink">ing</span>
+    </p>
+
+    <button class="btn" onclick="alert('เริ่มจับเวลา!')">Start Timer</button>
+  </main>
+
+  <!-- ส่วนท้าย -->
+  <footer class="site-footer">
+    <p>© 2025 Hatchy Time</p>
+  </footer>
+
+</body>
 </html>
