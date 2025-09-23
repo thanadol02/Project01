@@ -1,0 +1,109 @@
+/* ---------- Theme Variables ---------- */
+:root{
+  --bg: #ffffff;
+  --fg: #0f172a;
+  --aqua: #00ffff;
+  --blue: #1e3a8a;
+  --pink: #ec4899;
+  --muted: #6b7280;
+  --card: #f8fafc;
+  --border: #e5e7eb;
+}
+
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg: #0b0f17;
+    --fg: #e5e7eb;
+    --card: #0f172a;
+    --border: #1f2937;
+  }
+}
+
+/* ---------- Base ---------- */
+*{ box-sizing: border-box; }
+html, body{ height: 100%; }
+body{
+  margin: 0;
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+}
+
+/* ---------- Layout ---------- */
+.container{
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+/* ---------- Header ---------- */
+.site-header{
+  background: #000;
+  color: var(--aqua);
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.site-title{
+  margin: 0;
+  font-size: 1.6rem;
+}
+.nav{
+  display: flex;
+  gap: 12px;
+}
+.nav-link{
+  color: var(--aqua);
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: transform .15s ease, background-color .15s ease;
+}
+.nav-link:hover{ background: rgba(0,255,255,.08); transform: translateY(-1px); }
+.nav-link.is-active{ background: rgba(0,255,255,.15); }
+
+/* ---------- Typography helpers ---------- */
+.subtitle{
+  font-size: 1.25rem;
+  margin: 24px 0 8px;
+}
+.text-blue{ color: var(--blue); }
+.text-pink{ color: var(--pink); }
+
+/* ---------- Components ---------- */
+.btn{
+  display: inline-block;
+  margin-top: 12px;
+  padding: 10px 18px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 10px;
+  background: var(--aqua);
+  color: #000;
+  cursor: pointer;
+  transition: box-shadow .2s ease, transform .1s ease, opacity .2s ease;
+}
+.btn:hover{ box-shadow: 0 6px 20px rgba(0,0,0,.15); }
+.btn:active{ transform: translateY(1px); opacity: .95; }
+
+/* ---------- Footer ---------- */
+.site-footer{
+  border-top: 1px solid var(--border);
+  background: var(--card);
+  color: var(--muted);
+  text-align: center;
+  padding: 16px;
+  margin-top: 32px;
+}
+
+/* ---------- Utility ---------- */
+.hidden{ display: none !important; }
+.card{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+}
