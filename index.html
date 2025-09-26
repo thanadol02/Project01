@@ -8,26 +8,49 @@
   <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
+<main class="container">
+  <p class="subtitle">
+    <span class="text-blue">Reading</span>
+  </p>
 
-  <!-- ส่วนหัว -->
+  <div class="camera-wrap">
+    <video id="cam" autoplay playsinline muted></video>
+    <canvas id="overlay"></canvas>
+  </div>
+
+  <div class="controls">
+    <button class="btn" id="btnStart">Start Detection</button>
+    <button class="btn" id="btnStop">Stop</button>
+  </div>
+
+  <button class="btn" onclick="alert('เริ่มจับเวลา!')">Start Timer</button>
+</main>
+
+<!-- MediaPipe JS (CDN) -->
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/face_detection.js"></script>
+
+<!-- สคริปต์ของเรา -->
+<script src="assets/js/detection.js"></script>
+
   <header class="site-header">
     <h1 class="site-title">📖 Reading Timer</h1>
     <nav class="nav">
-      <a href="index.html" class="nav-link is-active">Home</a>
-      <a href="timer.html" class="nav-link">Timer</a>
+      <a href="index.html" class="">Home</a><br>
+      <a href="timer.html" class="">Timer</a>
     </nav>
   </header>
 
-  <!-- เนื้อหา -->
   <main class="container">
     <p class="subtitle">
-      <span class="text-blue">Read</span><span class="text-pink">ing</span>
+      <span class="text-blue">Reading</span>
     </p>
 
     <button class="btn" onclick="alert('เริ่มจับเวลา!')">Start Timer</button>
   </main>
 
-  <!-- ส่วนท้าย -->
+  
   <footer class="site-footer">
     <p>© 2025 Hatchy Time</p>
   </footer>
